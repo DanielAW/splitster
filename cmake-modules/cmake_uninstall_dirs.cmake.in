@@ -1,0 +1,21 @@
+SET(UNINST_DIRS @DIR_LIST@)
+IF(UNINST_DIRS)
+  FOREACH(UNINST_DIR ${UNINST_DIRS})
+    SET(dir @CMAKE_INSTALL_PREFIX@/${UNINST_DIR})
+    MESSAGE(STATUS "Removing directory ${dir}")
+    IF(EXISTS "${dir}")
+      EXEC_PROGRAM(
+        "@CMAKE_COMMAND@" ARGS "-E remove_directory ${dir}"
+        OUTPUT_VARIABLE rmdir_out
+        RETURN_VALUE    rmdir_retval
+      )
+      IF(NOT "${rmdir_retval}" STREQUAL 0)
+        MESSAGE(FATAL_ERROR "Problem when removing directory ${dir}")
+      ENDIF(NOT "${rmdir_retval}" STREQUAL 0)
+    ELSE(EXISTS "${dir}")
+      MESSAGE(STATUS "Directory "${dir}" does not exist.")
+    ENDIF(EXISTS "${dir}")
+  ENDFOREACH(UNINST_DIR ${UNINST_DIRS})
+ELSE(UNINST_DIRS)
+  MESSAGE(STATUS "No directories to uninstall.")
+ENDIF(UNINST_DIRS)
